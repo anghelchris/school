@@ -1,29 +1,22 @@
 package com.example;
 
-import javax.servlet.annotation.WebServlet;
-
+import com.example.dao.StudentDao;
 import com.example.dao.TeacherDao;
+import com.example.domain.Student;
 import com.example.domain.Teacher;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.Or;
 import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.event.FieldEvents;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
 
-/**
- * This UI is the application entry point. A UI may either represent a browser window 
- * (or tab) or some part of a html page where a Vaadin application is embedded.
- * <p>
- * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be 
- * overridden to add component to the user interface and initialize non-component functionality.
- */
+import javax.servlet.annotation.WebServlet;
+
 @Theme("mytheme")
 public class MyUI extends UI {
 
@@ -58,6 +51,7 @@ public class MyUI extends UI {
         Button teacherBtn = new Button("Teacher");
         teacherBtn.setWidth("100%");
         teacherBtn.addClickListener(e -> {
+
             BeanItemContainer<Teacher> container = new BeanItemContainer<>(Teacher.class, TeacherDao.getAll());
             Table teachersTable = new Table("Teachers", container);
             teachersTable.setPageLength(0);
@@ -65,40 +59,28 @@ public class MyUI extends UI {
             teachersTable.addStyleName("table");
             teachersTable.setColumnReorderingAllowed(true);
 
-//            teachersTable.addGeneratedColumn("ageString", new Table.ColumnGenerator() {
-//                @Override
-//                public Object generateCell(Table source, Object itemId, Object columnId) {
-//                    return String.valueOf(((Teacher) itemId).getAge());
-//                }
-//            });
-
             teachersTable.setVisibleColumns("firstName", "lastName", "age");
             teachersTable.setColumnHeaders("First Name", "Last Name", "Age");
 
             TextField filter = new TextField();
             filter.setIcon(FontAwesome.FILTER);
-            filter.addTextChangeListener(new FieldEvents.TextChangeListener() {
-                Or or = null;
+            filter.addTextChangeListener(event -> {
 
-                @Override
-                public void textChange(FieldEvents.TextChangeEvent event) {
-                    Container.Filterable filterable = (Container.Filterable) teachersTable.getContainerDataSource();
+                container.removeAllContainerFilters();
 
-                    if (or != null) filterable.removeContainerFilter(or);
+                try {
+                    int parseInt = Integer.parseInt(event.getText());
+                    container.addContainerFilter(new Compare.Equal("age", parseInt));
 
-                    if (event.getText() != null) {
-                        filterable.addContainerFilter(or = new Or(new SimpleStringFilter("firstName", event.getText(), true, false)
-                                , new SimpleStringFilter("lastName", event.getText(), true, false)
-                            , new SimpleStringFilter("ageString", event.getText(), true, false)));
-                    } else
-
-                    filterable.addContainerFilter(or = new Or(new SimpleStringFilter("firstName", event.getText(), true, false)
-                            , new SimpleStringFilter("lastName", event.getText(), true, false)
-//                            , new SimpleStringFilter("ageString", event.getText(), true, false)
-                            , new Compare.Equal("age", Integer.parseInt(event.getText()))
-                    ));
+                } catch (NumberFormatException nfc) {
+                    container.addContainerFilter(new Or(
+                                    new SimpleStringFilter("firstName", event.getText(), true, false),
+                                    new SimpleStringFilter("lastName", event.getText(), true, false)
+                            )
+                    );
                 }
             });
+
             FormLayout filterWrapper = new FormLayout(filter);
             filterWrapper.setComponentAlignment(filter, Alignment.MIDDLE_RIGHT);
             filterWrapper.setMargin(false);
@@ -112,24 +94,52 @@ public class MyUI extends UI {
 
         });
 
-//        Button studentBtn = new Button("Student");
-//        studentBtn.setWidth("100%");
-//        studentBtn.addClickListener(e -> {
-//            BeanItemContainer<Student> container = new BeanItemContainer<>(Student.class, dataBase.getAllStudents());
-//
-//            Table students = new Table("Students", container);
-//            students.setPageLength(0);
-//            students.setSizeFull();
-//            students.addStyleName("table");
-//            students.setColumnReorderingAllowed(true);
-//            students.setVisibleColumns("firstName", "lastName", "age", "year", "group");
-//            students.setColumnHeaders("First Name", "Last Name", "Age", "Year", "Group");
-//
-//            rightSide.removeAllComponents();
-//            rightSide.addComponent(students);
-//        });
+        Button studentBtn = new Button("Student");
+        studentBtn.setWidth("100%");
+        studentBtn.addClickListener(e -> {
 
-        VerticalLayout layout = new VerticalLayout(teacherBtn);//, studentBtn);
+            BeanItemContainer<Student> container = new BeanItemContainer<>(Student.class, StudentDao.getAll());
+
+            Table studentsTable = new Table("Students", container);
+            studentsTable.setPageLength(0);
+            studentsTable.setSizeFull();
+            studentsTable.addStyleName("table");
+            studentsTable.setColumnReorderingAllowed(true);
+            studentsTable.setVisibleColumns("firstName", "lastName", "age");
+            studentsTable.setColumnHeaders("First Name", "Last Name", "Age");
+
+            TextField filter = new TextField();
+            filter.setIcon(FontAwesome.FILTER);
+            filter.addTextChangeListener(event -> {
+
+                container.removeAllContainerFilters();
+
+                try {
+                    int parseInt = Integer.parseInt(event.getText());
+                    container.addContainerFilter(new Compare.Equal("age", parseInt));
+
+                } catch (NumberFormatException nfc) {
+                    container.addContainerFilter(new Or(
+                                    new SimpleStringFilter("firstName", event.getText(), true, false),
+                                    new SimpleStringFilter("lastName", event.getText(), true, false)
+                            )
+                    );
+                }
+            });
+
+            FormLayout filterWrapper = new FormLayout(filter);
+            filterWrapper.setComponentAlignment(filter, Alignment.MIDDLE_RIGHT);
+            filterWrapper.setMargin(false);
+            filterWrapper.setSizeUndefined();
+
+            rightSide.removeAllComponents();
+            rightSide.addComponents(filterWrapper, studentsTable);
+            rightSide.setComponentAlignment(filterWrapper, Alignment.MIDDLE_RIGHT);
+            rightSide.setExpandRatio(filterWrapper, 0.12f);
+            rightSide.setExpandRatio(studentsTable, 0.88f);
+        });
+
+        VerticalLayout layout = new VerticalLayout(teacherBtn, studentBtn);
         layout.setSpacing(true);
         layout.setSizeFull();
 
@@ -143,6 +153,7 @@ public class MyUI extends UI {
         setContent(mainLayout);
 
     }
+
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {
