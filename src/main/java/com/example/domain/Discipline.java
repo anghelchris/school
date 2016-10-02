@@ -18,6 +18,7 @@ public class Discipline {
     private Collection<Grade> grades;
     private Collection<Teacher> teachers;
     private Collection<Group> groups;
+    private GeneralDiscipline generalDiscipline;
 
     @GenericGenerator(name = "generator", strategy = "seqhilo", parameters = { @Parameter(name = "max_lo", value = "1"),
             @Parameter(name = "sequence", value = "DISCIPLINES_ID_SEQ") })
@@ -92,5 +93,15 @@ public class Discipline {
 
     public void setGroups(Collection<Group> groups) {
         this.groups = groups;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "GENERAL_DISCIPLINE_ID", referencedColumnName = "ID")
+    public GeneralDiscipline getGeneralDiscipline() {
+        return generalDiscipline;
+    }
+
+    public void setGeneralDiscipline(GeneralDiscipline generalDiscipline) {
+        this.generalDiscipline = generalDiscipline;
     }
 }

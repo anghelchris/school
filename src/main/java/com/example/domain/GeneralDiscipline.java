@@ -1,25 +1,20 @@
 package com.example.domain;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.util.Collection;
 
-/**
- * Created by jackson on 9/24/16.
- */
 @Entity
-@Table(name = "GROUPS")
-public class Group {
+@Table(name = "GENERAL_DISCIPLINES")
+public class GeneralDiscipline {
     private int id;
     private String name;
-    private Collection<Student> students;
     private Collection<Discipline> disciplines;
     private GeneralGroup generalGroup;
 
-    @GenericGenerator(name = "generator", strategy = "seqhilo", parameters = { @Parameter(name = "max_lo", value = "1"),
-            @Parameter(name = "sequence", value = "GROUPS_ID_SEQ") })
+    @GenericGenerator(name = "generator", strategy = "seqhilo", parameters = { @org.hibernate.annotations.Parameter(name = "max_lo", value = "1"),
+            @org.hibernate.annotations.Parameter(name = "sequence", value = "GENERAL_DISCIPLINES_ID_SEQ") })
     @GeneratedValue(generator = "generator")
     @Id
     @Column(name = "ID", nullable = false, precision = 0)
@@ -31,8 +26,8 @@ public class Group {
         this.id = id;
     }
 
-
-    @Column(name = "NAME", nullable = false, length = 3)
+    @Basic
+    @Column(name = "NAME", nullable = false, length = 50)
     public String getName() {
         return name;
     }
@@ -46,27 +41,22 @@ public class Group {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Group group = (Group) o;
+        GeneralDiscipline that = (GeneralDiscipline) o;
 
-        return id == group.id;
+        if (id != that.id) return false;
+        if (name != null ? ! name.equals(that.name) : that.name != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return id;
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 
-    @OneToMany(mappedBy = "group")
-    public Collection<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(Collection<Student> students) {
-        this.students = students;
-    }
-
-    @ManyToMany
-    @JoinTable(name = "GROUP_DISCIPLINES",  joinColumns = @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "DISCIPLINE_ID", referencedColumnName = "ID"))
+    @OneToMany(mappedBy = "generalDiscipline")
     public Collection<Discipline> getDisciplines() {
         return disciplines;
     }

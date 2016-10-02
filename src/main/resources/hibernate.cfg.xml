@@ -23,6 +23,8 @@
         <mapping class="com.example.domain.Group"/>
         <mapping class="com.example.domain.Student"/>
         <mapping class="com.example.domain.Teacher"/>
+        <mapping class="com.example.domain.GeneralDiscipline"/>
+        <mapping class="com.example.domain.GeneralGroup"/>
 
     </session-factory>
 </hibernate-configuration>
