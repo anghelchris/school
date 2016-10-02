@@ -47,19 +47,14 @@ public class Discipline {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Discipline that = (Discipline) o;
+        Discipline discipline = (Discipline) o;
 
-        if (id != that.id) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-
-        return true;
+        return id == discipline.id;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
+        return id;
     }
 
     @OneToMany(mappedBy = "discipline")
@@ -81,7 +76,7 @@ public class Discipline {
     }
 
     @ManyToMany
-    @JoinTable(name = "DISCIPLINE_TEACHERS", catalog = "", schema = "SCHOOL", joinColumns = @JoinColumn(name = "DISCIPLINE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "TEACHER_ID", referencedColumnName = "ID"))
+    @JoinTable(name = "DISCIPLINE_TEACHERS", joinColumns = @JoinColumn(name = "DISCIPLINE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "TEACHER_ID", referencedColumnName = "ID"))
     public Collection<Teacher> getTeachers() {
         return teachers;
     }

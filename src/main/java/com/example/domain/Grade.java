@@ -10,7 +10,7 @@ import java.util.Date;
  * Created by jackson on 9/24/16.
  */
 @Entity
-@Table(name = "GRADES", schema = "SCHOOL", catalog = "")
+@Table(name = "GRADES")
 public class Grade {
     private int id;
     private int value;
@@ -51,27 +51,20 @@ public class Grade {
         this.date = date;
     }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//
-//        Grade grade = (Grade) o;
-//
-//        if (id != grade.id) return false;
-//        if (value != grade.value) return false;
-//        if (date != null ? !date.equals(grade.date) : grade.date != null) return false;
-//
-//        return true;
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        int result = id;
-//        result = 31 * result + value;
-//        result = 31 * result + (date != null ? date.hashCode() : 0);
-//        return result;
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Grade grade = (Grade) o;
+
+        return id == grade.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 
     @ManyToOne
     @JoinColumn(name = "DISCIPLINE_ID", referencedColumnName = "ID", nullable = false)

@@ -47,17 +47,12 @@ public class Group {
 
         Group group = (Group) o;
 
-        if (id != group.id) return false;
-        if (name != null ? !name.equals(group.name) : group.name != null) return false;
-
-        return true;
+        return id == group.id;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
+        return id;
     }
 
     @OneToMany(mappedBy = "group")
@@ -70,7 +65,7 @@ public class Group {
     }
 
     @ManyToMany
-    @JoinTable(name = "GROUP_DISCIPLINES", catalog = "", schema = "SCHOOL", joinColumns = @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "DISCIPLINE_ID", referencedColumnName = "ID"))
+    @JoinTable(name = "GROUP_DISCIPLINES",  joinColumns = @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "DISCIPLINE_ID", referencedColumnName = "ID"))
     public Collection<Discipline> getDisciplines() {
         return disciplines;
     }

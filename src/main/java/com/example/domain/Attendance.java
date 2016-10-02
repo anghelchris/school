@@ -45,19 +45,14 @@ public class Attendance {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Attendance that = (Attendance) o;
+        Attendance attendance = (Attendance) o;
 
-        if (id != that.id) return false;
-        if (date != null ? !date.equals(that.date) : that.date != null) return false;
-
-        return true;
+        return id == attendance.id;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        return result;
+        return id;
     }
 
     @ManyToOne

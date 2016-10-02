@@ -1,38 +1,36 @@
 package com.example.dao;
 
+import com.example.HibernateUtil;
 import com.example.domain.Teacher;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 
 import java.util.List;
 
-/**
- * Created by angel on 9/21/16.
- */
 public class TeacherDao {
 
-   public static List<Teacher> getAll() {
+    public static List<Teacher> getAll() {
 
-       Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        s.getTransaction().begin();
 
-       StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-               .applySettings(cfg.getProperties());
-       ServiceRegistry service = builder.build();
+        List<Teacher> teachers = s.createCriteria(Teacher.class).list();
 
-       SessionFactory sf = cfg.buildSessionFactory(service);
-       Session s = sf.openSession();
-       s.getTransaction().begin();
+        s.getTransaction().commit();
 
-       List<Teacher> teachers = s.createCriteria(Teacher.class).list();
+        s.close();
 
-       s.getTransaction().commit();
+        return teachers;
+    }
 
-       s.close();
-       sf.close();
+    public static void  update(Teacher teacher) {
 
-       return teachers;
-   }
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        s.getTransaction().begin();
+
+        s.update(teacher);
+
+        s.getTransaction().commit();
+
+        s.close();
+    }
 }

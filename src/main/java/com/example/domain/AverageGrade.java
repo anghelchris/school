@@ -87,30 +87,14 @@ public class AverageGrade {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AverageGrade that = (AverageGrade) o;
+        AverageGrade averageGrade = (AverageGrade) o;
 
-        if (id != that.id) return false;
-        if (firstTrimester != null ? !firstTrimester.equals(that.firstTrimester) : that.firstTrimester != null)
-            return false;
-        if (secondTrimester != null ? !secondTrimester.equals(that.secondTrimester) : that.secondTrimester != null)
-            return false;
-        if (thirdTrimester != null ? !thirdTrimester.equals(that.thirdTrimester) : that.thirdTrimester != null)
-            return false;
-        if (finalGrade != null ? !finalGrade.equals(that.finalGrade) : that.finalGrade != null) return false;
-        if (year != null ? !year.equals(that.year) : that.year != null) return false;
-
-        return true;
+        return id == averageGrade.id;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (firstTrimester != null ? firstTrimester.hashCode() : 0);
-        result = 31 * result + (secondTrimester != null ? secondTrimester.hashCode() : 0);
-        result = 31 * result + (thirdTrimester != null ? thirdTrimester.hashCode() : 0);
-        result = 31 * result + (finalGrade != null ? finalGrade.hashCode() : 0);
-        result = 31 * result + (year != null ? year.hashCode() : 0);
-        return result;
+        return id;
     }
 
     @ManyToOne

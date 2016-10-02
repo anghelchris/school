@@ -36,7 +36,7 @@
 
   // Insert your own theme rules here
   .v-horizontallayout-header {
-    background-image: url('download.jpg');
+    background-image: url('img/school.png');
     background-repeat: no-repeat;
     background-size: cover;
   }
@@ -56,5 +56,7 @@
   .v-table-table-table {
    color: #00ace0;
   }
-
+  .v-popupview-popup-styledPopup {
+    padding: 0px;
+  }
 }
